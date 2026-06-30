@@ -1,0 +1,48 @@
+/* App specific styles */
+.demo-section {
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+}
+
+.demo-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Devotee Profile Header Temple Image layout */
+.profile-temple-img-container {
+  position: relative;
+  width: 220px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .profile-temple-img-container {
+    display: none !important;
+  }
+}

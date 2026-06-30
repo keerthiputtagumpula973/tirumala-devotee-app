@@ -1,0 +1,272 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Fonts */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-title: 'Cinzel', serif;
+
+  /* Theme Tokens - Light Mode */
+  --bg-app: #f4edd9; /* Warm cream/sandalwood undertone */
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #fdfaf2;
+  
+  --primary: #c25900; /* Rich spiritual Saffron */
+  --primary-rgb: 194, 89, 0;
+  --primary-dark: #8c3f00;
+  --primary-light: #fff2e6;
+  
+  --secondary: #800000; /* Traditional Maroon */
+  --secondary-rgb: 128, 0, 0;
+  --secondary-dark: #4a0000;
+  
+  --gold: #d4af37; /* Sacred Golden Yellow */
+  --gold-light: #faf3d1;
+  --gold-dark: #aa8511;
+
+  --success: #2e7d32;
+  --success-bg: #e8f5e9;
+  --warning: #ef6c00;
+  --warning-bg: #fff3e0;
+  --error: #c62828;
+  --error-bg: #ffebee;
+  --info: #1565c0;
+  --info-bg: #e3f2fd;
+
+  --text-primary: #2d2621;
+  --text-secondary: #6e5f55;
+  --text-muted: #9e8e83;
+  --text-on-primary: #ffffff;
+
+  --border-color: #e6dfd1;
+  --border-focus: #c25900;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(45, 38, 33, 0.08);
+  --shadow-lg: 0 12px 24px rgba(45, 38, 33, 0.15);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
+  /* Theme Tokens - Dark Mode */
+  --bg-app: #120e0c; /* Deep sacred charcoal-saffron shadow */
+  --bg-surface: #1c1613;
+  --bg-surface-alt: #241d1a;
+
+  --primary: #f27c22; /* Vibrant spiritual orange for dark mode */
+  --primary-rgb: 242, 124, 34;
+  --primary-dark: #c25900;
+  --primary-light: #2d1d13;
+
+  --secondary: #a32a2a;
+  --secondary-rgb: 163, 42, 42;
+  --secondary-dark: #6e1515;
+
+  --gold: #e5c158;
+  --gold-light: #2e2617;
+  --gold-dark: #d4af37;
+
+  --success: #4caf50;
+  --success-bg: #112211;
+  --warning: #ff9800;
+  --warning-bg: #2d1f11;
+  --error: #ef5350;
+  --error-bg: #2d1313;
+  --info: #42a5f5;
+  --info-bg: #11202e;
+
+  --text-primary: #f5f0eb;
+  --text-secondary: #bfb2a7;
+  --text-muted: #8c7e74;
+  --text-on-primary: #120e0c;
+
+  --border-color: #2e241f;
+  --border-focus: #f27c22;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Reset and Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  overflow-x: hidden;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Laptop & Full-Screen Layout Wrapper */
+.phone-frame-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.phone-device {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-app);
+  overflow: hidden;
+}
+
+/* Hidden Notch / Camera on Desktop */
+.phone-notch {
+  display: none !important;
+}
+
+.phone-camera {
+  display: none !important;
+}
+
+/* Full-Screen Content Area */
+.phone-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-app);
+  position: relative;
+  transition: background-color var(--transition-normal);
+  min-height: calc(100vh - 64px); /* Subtract header height */
+}
+
+/* Desktop-specific container utilities */
+.desktop-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 20px;
+  box-sizing: border-box;
+}
+
+.form-container-card {
+  max-width: 650px;
+  width: 100%;
+  margin: 20px auto 40px auto;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 32px 28px;
+  box-sizing: border-box;
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+.dark .form-container-card {
+  background-color: var(--bg-surface-alt);
+}
+
+/* Dynamic Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulseGold {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight var(--transition-fast) forwards;
+}
+
+.animate-pulse-gold {
+  animation: pulseGold 2s infinite;
+}
+
+/* General Typography helper classes */
+.font-spiritual {
+  font-family: var(--font-title);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Glassmorphism utility card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.dark .glass-card {
+  background: rgba(28, 22, 19, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-premium {
+  transition: all var(--transition-fast) !important;
+}
+.btn-premium:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: var(--shadow-md) !important;
+}
+.btn-premium:active:not(:disabled) {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+
+/* Devotee Services Responsive Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .services-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
