@@ -6,7 +6,7 @@ interface AppContextType {
   coPilgrims: CoPilgrim[];
   bookings: Booking[];
   slots: DarshanSlot[];
-  login: (mobile: string, otp: string) => Promise<boolean>;
+  login: (mobile: string, otp: string, isAlreadyVerified?: boolean) => Promise<boolean>;
   register: (profile: Omit<UserProfile, 'id'>) => Promise<boolean>;
   logout: () => void;
   addCoPilgrim: (pilgrim: Omit<CoPilgrim, 'id' | 'userId'>) => Promise<boolean>;
@@ -91,6 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     initializeSlots();
+    
     // Clean up old auto-generated devotee profiles to force fresh registration
     const savedUserStr = localStorage.getItem('ttd-user');
     if (savedUserStr) {
@@ -101,6 +102,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setUser(null);
         }
       } catch (e) {}
+    }
+
+    // Pre-populate your mobile number in the persistent devotee database
+    const defaultDevotee: UserProfile = {
+      id: 'devotee-default-1',
+      name: 'Srinivasa Rao',
+      mobile: '7680020615',
+      age: 35,
+      gender: 'Male',
+      idProofType: 'Aadhaar',
+      idNumber: '123456789012',
+      authToken: 'mock-jwt-header-token.xxxxx',
+      refreshToken: 'mock-refresh-token.yyyyy',
+      tokenCreatedAt: Date.now()
+    };
+
+    const registryStr = localStorage.getItem('ttd-devotee-registry');
+    try {
+      const registry = registryStr ? JSON.parse(registryStr) as UserProfile[] : [];
+      if (!registry.some(r => r.mobile === '7680020615')) {
+        registry.push(defaultDevotee);
+        localStorage.setItem('ttd-devotee-registry', JSON.stringify(registry));
+      }
+    } catch (e) {
+      localStorage.setItem('ttd-devotee-registry', JSON.stringify([defaultDevotee]));
     }
   }, []);
 
@@ -165,32 +191,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       tokenCreatedAt: Date.now(),
     };
     
+    // Save to active session
     setUser(newUser);
     localStorage.setItem('ttd-user', JSON.stringify(newUser));
+
+    // Save to persistent devotee registry (mock database)
+    const registryStr = localStorage.getItem('ttd-devotee-registry') || '[]';
+    try {
+      const registry = JSON.parse(registryStr) as UserProfile[];
+      const filtered = registry.filter(r => r.mobile !== profile.mobile);
+      filtered.push(newUser);
+      localStorage.setItem('ttd-devotee-registry', JSON.stringify(filtered));
+    } catch (e) {
+      localStorage.setItem('ttd-devotee-registry', JSON.stringify([newUser]));
+    }
+
     return true;
   };
 
-  const login = async (mobile: string, otp: string): Promise<boolean> => {
+  const login = async (mobile: string, otp: string, isAlreadyVerified?: boolean): Promise<boolean> => {
     await new Promise((resolve) => setTimeout(resolve, 600));
     
-    // Simply accept any 6-digit OTP passcode for mock ease (e.g. 123456 or any 6 digits)
-    if (otp.length === 6) {
-      // Mock lookup: only allow logging in if user profile exists with matching mobile
-      const savedUserStr = localStorage.getItem('ttd-user');
-      
-      if (savedUserStr) {
-        const savedUser = JSON.parse(savedUserStr);
-        if (savedUser.mobile === mobile) {
+    console.log(`[AUTH] Login attempt for mobile: ${mobile}`);
+
+    if (isAlreadyVerified || otp.length === 6) {
+      const registryStr = localStorage.getItem('ttd-devotee-registry') || '[]';
+      try {
+        const registry = JSON.parse(registryStr) as UserProfile[];
+        console.log('[AUTH] Current Devotee Registry:', registry);
+        
+        const matchedUser = registry.find(r => r.mobile === mobile);
+        console.log('[AUTH] Matched user found:', matchedUser);
+        
+        if (matchedUser) {
           const targetUser: UserProfile = {
-            ...savedUser,
+            ...matchedUser,
             authToken: 'mock-jwt-header-token.xxxxx',
             refreshToken: 'mock-refresh-token.yyyyy',
             tokenCreatedAt: Date.now(),
           };
           setUser(targetUser);
           localStorage.setItem('ttd-user', JSON.stringify(targetUser));
+          console.log('[AUTH] Login successful for:', targetUser.name);
           return true;
+        } else {
+          console.warn(`[AUTH] No devotee profile matched mobile: ${mobile}`);
         }
+      } catch (e) {
+        console.error('[AUTH] Failed to parse devotee registry', e);
       }
     }
     return false;
